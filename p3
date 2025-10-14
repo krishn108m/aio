@@ -1,0 +1,34 @@
+# practical 3
+
+
+csv_file_path = 'onenode.csv'
+df = pd.read_csv(csv_file_path)
+arr = np.array(df)
+arr = arr[:, 1:]
+deg = arr.sum(axis = 1)
+degmat = np.diag(deg)
+
+#Laplacian
+lap = degmat - arr
+
+#Transition Probability Matrix
+degmat_fixed = np.where(degmat == 0, 1, degmat)
+trans = arr/degmat_fixed
+
+#two mode
+import pandas as pd
+import numpy as np
+
+csv_file_path = 'twomode.csv'
+df = pd.read_csv(csv_file_path)
+arr2 = np.array(df)
+arr2 = arr2[:, 1:]
+deg2 = arr2.sum(axis = 1)
+degmat2 = np.diag(deg2)
+lap2 = degmat2 - arr2
+
+#Transition Probability Matrix
+degmat2_fixed = np.where(degmat2 == 0, 1, degmat2)
+trans2 = arr2/degmat2_fixed
+tra = np.sum(trans2)
+print(tra)
