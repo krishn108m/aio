@@ -1,0 +1,32 @@
+import numpy as np
+m = np.array([[0, 1, 1],
+              [0, 0, 1],
+              [1, 0, 0]])
+print(m)
+
+density = (2*np.sum(m))/m.size
+# density
+degree = np.sum(m, axis = 1)
+
+for i, deg in enumerate(degree):
+  print(f"Degree of node {i}:", deg )
+
+reciprocity = np.sum(m * m.T) / 2
+print("Reciprocity:", reciprocity/len(m))
+
+import networkx as nx
+G = nx.DiGraph(m)
+transitivity_nx = nx.transitivity(G)
+print(f"Transitivity (using NetworkX): {transitivity_nx}")
+
+l = len(m)
+max_deg = l - 1
+
+degree_centrality_m = degree / max_deg
+for i in range(l):
+  print("Degree centrality of vertex", i, "for matrix m is", degree_centrality_m[i])
+
+import networkx as nx
+G = nx.DiGraph(m)
+clustering_coefficients = nx.clustering(G)
+print("Clustering Coefficient (using NetworkX):", clustering_coefficients)
