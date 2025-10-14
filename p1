@@ -1,0 +1,43 @@
+# Practical 1
+m = np.array([[1, 0, 0, 0], [1, 1, 0, 0], [1, 1, 1, 0], [1, 1, 1, 1]])
+
+def adjacent(m):
+  for i in range(len(m)):
+    for j in range(len(m)):
+      print(m[i][j], end=" ")
+    print()
+adjacent(m)
+
+
+edges = np.array([(1, 2), (0, 3), (1, 0), (0, 2), (3, 1)])
+
+def elist(edges):
+  print("Edge list")
+  for edge in edges:
+    print("Edge list: ", edge)
+
+elist(edges)
+
+
+p = {
+    0: (0, 1),
+    1 : (2, 1),
+    2: (2, 0),
+    3 : (3, 2)
+}
+
+def socio(p, edges):
+  print("Sociogram:")
+  for  k, v in p.items():
+    plt.scatter(v[0], v[1], s=500, c = "lightblue", edgecolors="black")
+    plt.text(v[0], v[1], k, ha = 'center', va = "center", fontsize = 10)
+
+  for edge in edges:
+    n1, n2 = edge
+    print(edge)
+    x = [p[n1][0], p[n2][0]]
+    y = [p[n1][1], p[n2][1]]
+    plt.plot(x, y, 'k-', linewidth = 1)
+  plt.show()
+
+socio(p, edges)
