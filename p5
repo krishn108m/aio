@@ -1,0 +1,64 @@
+# practical 5
+graph={}
+from re import M
+with open("Movie.txt","r")as f:
+    for line in f :
+        emp,mov=line.strip().split("\t")
+        if emp not in graph:
+          graph[emp]={"type":"employee","edge":set()}
+        if mov not in graph:
+          graph[mov]={"type":"movie","edge":set()}
+        graph[emp]["edge"].add(mov)
+        graph[mov]["edge"].add(emp)
+print("Two-mode Bipartite Graph Graph (employee-movie):\n")
+for node,data in graph.items():
+    print(f"{node}({data['type']})->{list(data['edge'])}\n")
+
+import matplotlib.pyplot as plt
+
+employees = {node for node, data in graph.items() if data['type'] == 'employee'}
+movies = {node for node, data in graph.items() if data['type'] == 'movie'}
+
+pos = {}
+
+for i, emp in enumerate(employees):
+    pos[emp] = (0, i)
+for i, mov in enumerate(movies):
+    pos[mov] = (1, i)
+
+for node, p in pos.items():
+    plt.plot(p[0], p[1], 'o', markersize=10)
+    plt.text(p[0], p[1], node, ha='center', va='bottom')
+
+for node, data in graph.items():
+    for edge in data['edge']:
+        if node in pos and edge in pos:
+            plt.plot([pos[node][0], pos[edge][0]], [pos[node][1], pos[edge][1]], 'gray', linestyle='-', linewidth=0.5)
+plt.title("Bipartite Graph (Employee-Movie)")
+plt.axis('off')
+plt.show()
+
+import networkx as nx
+
+B = nx.Graph()
+for node, data in graph.items():
+    B.add_node(node, type=data['type'])
+
+for node, data in graph.items():
+    for edge in data['edge']:
+        if B.has_node(node) and B.has_node(edge):
+            B.add_edge(node, edge)
+
+employees = {node for node, data in graph.items() if data['type'] == 'employee'}
+employee_graph_nx = nx.bipartite.projected_graph(B, employees)
+
+print("One-mode Employee Graph (Employee-Employee) - NetworkX:\n")
+for node, neighbors in employee_graph_nx.adjacency():
+    print(f"{node} -> {list(neighbors)}")
+
+movies = {node for node, data in graph.items() if data['type'] == 'movie'}
+movie_graph_nx = nx.bipartite.projected_graph(B, movies)
+
+print("\nOne-mode Movie Graph (Movie-Movie) - NetworkX:\n")
+for node, neighbors in movie_graph_nx.adjacency():
+    print(f"{node} -> {list(neighbors)}")
