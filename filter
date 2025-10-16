@@ -1,0 +1,34 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+
+image = Image.open("/content/sample_data/Screenshot 2025-09-13 020908.png").convert("L")  # 'L' = grayscale
+image = image.resize((100, 100))
+img_array = np.array(image, dtype='float32')
+
+filter_kernel = np.array([
+    [-1, -2, -1],
+    [ 0,  0,  0],
+    [ 1,  2,  1]
+], dtype='float32')
+
+img_h, img_w = img_array.shape
+f_h, f_w = filter_kernel.shape
+out_h = img_h - f_h + 1
+out_w = img_w - f_w + 1
+output = np.zeros((out_h, out_w))
+
+for i in range(out_h):
+    for j in range(out_w):
+        region = img_array[i:i+f_h, j:j+f_w]
+        output[i, j] = np.sum(region * filter_kernel)
+
+output = np.clip(output,0,255)
+
+#before filter
+plt.imshow(img_array, cmap='gray')
+plt.show()
+
+#after filter
+plt.imshow(output, cmap='gray')
+plt.show()
