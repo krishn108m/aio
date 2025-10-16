@@ -1,0 +1,25 @@
+from sklearn.model_selection import train_test_split
+import tensorflow
+from tensorflow import keras
+from keras.layers import Dense,Input
+from keras.models import Model
+from keras.datasets import mnist
+ 
+
+(x_train,y_train),(x_test,y_test) = mnist.load_data()
+
+x_train = x_train.astype('float32') / 255.0
+x_test = x_test.astype('float32') / 255.0
+x_train = x_train.reshape(-1, 784)
+x_test = x_test.reshape(-1, 784)
+
+input_image = Input(shape=(784,))
+encoded = Dense(200,activation='relu')(input_image)
+decoded = Dense(784,activation='sigmoid')(encoded)
+
+auto = Model(input_image,decoded)
+auto.compile(optimizer='adam',loss='binary_crossentropy' ,metrics=['accuracy'])
+auto.fit(x_train,x_train,epochs=5)
+
+
+
